@@ -1,0 +1,10 @@
+[Unit]
+Description=DOMJudge Judging Daemon Management Group
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/spawn_judgedaemons
+
+[Install]
+WantedBy=multiuser.target

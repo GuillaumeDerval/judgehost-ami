@@ -59,11 +59,15 @@
     - name: delete old init script
       file: path=/etc/init.d/domjudge-judgehost state=absent
 
-    - name: install our own init scripts
-      copy: src=files/{{item}} dest=/etc/init/{{item}}
+    - name: copy helper script for running judgedaemons
+      copy: src=files/spawn_judgedaemons dest=/usr/local/sbin/spawn_judgedaemons mode=0755
+
+    - name: install our own systemd init scripts
+      copy: src=files/{{item}} dest=/etc/systemd/system/{{item}}
       with_items:
-        - judgedaemon-instance.conf
-        - judgedaemons.conf
+        - judgedaemon-instance@.service
+        - judgedaemons.service
+      notify: enable judgedaemons
 
     - name: enable swap accounting(for cgroups)
       lineinfile: dest=/etc/default/grub.d/50-cloudimg-settings.cfg regexp="^GRUB_CMDLINE_LINUX_DEFAULT=" line='GRUB_CMDLINE_LINUX_DEFAULT="console=tty1 console=ttyS0 swapaccount=1"' state=present
@@ -79,14 +83,6 @@
       environment:
         DEBMIRROR: http://us-east-1.ec2.archive.ubuntu.com/ubuntu
 
-    - name: debconf accept java license
-      debconf: name='oracle-java8-installer' question='shared/accepted-oracle-license-v1-1' value='true' vtype='select'
-      tags: java
-
-    - name: be sure webupd8team ppa is available
-      apt_repository: repo='ppa:webupd8team/java' update_cache=yes state=present
-      tags: java
-
     - name: install compilers
       apt: pkg={{ item }} state=present
       with_items:
@@ -98,30 +94,24 @@
         - gnat                      # gnu ada
         - gfortran                  # fortran
         - mono-complete             # c#
-        #- fsharp                    # fsharp
+        - fsharp                    # fsharp
         - lua5.2                    # lua
         #- oracle-java7-installer   # java7
-        - oracle-java8-installer    # java8
+        #- oracle-java8-installer    # java8
+        - openjdk-8-jdk             # jdk8
         - gccgo                     # go reference compiler
         - golang                    # go using gcc
         - ruby                      # ruby
         - nodejs                    # javascript
         - gdc                       # D
-
-    - name: check for scala
-      stat: path=/usr/bin/scala
-      register: has_scala
-    - name: get scala deb file
-      get_url: url=http://downloads.typesafe.com/scala/2.11.7/scala-2.11.7.deb dest=/tmp/scala.deb
-      when: not has_scala.stat.exists
-    - name: install scala
-      apt: deb=/tmp/scala.deb
-      when: not has_scala.stat.exists
+        - scala                     # Scala
 
     - name: do something with ufw
       ufw: logging=off
       tags: ['domjudge-judgehost', 'ufw']
 
   handlers:
+    - name: enable judgedaemons
+      service: name=judgedaemons.service enabled=true
     - name: update grub
       command: /usr/sbin/update-grub

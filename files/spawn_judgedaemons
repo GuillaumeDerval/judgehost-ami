@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Set number of judges to corecount - 1
+NPROCS=$(nproc)
+if [ "$NPROCS" -gt 1 ]; then
+    NUM_JUDGES=$((NPROCS - 1))
+else
+    NUM_JUDGES=0
+fi
+
+# Make sure cgroups are mounted where we expect
+if [ ! -d /cgroup/memory/domjudge ]; then
+    /usr/sbin/create_cgroups
+fi
+
+# Launch judgedaemons in the systemd way
+if [ "$NUM_JUDGES" -eq "0" ]; then
+    systemctl start judgedaemon-instance@0.service
+else
+    for i in `seq 1 $NUM_JUDGES`; do
+       systemctl start judgedaemon-instance@$i.service
+    done
+fi

@@ -181,20 +181,13 @@ chrootcmd "dpkg-divert --local --rename --add /sbin/initctl"
 chrootcmd "ln -s /bin/true /sbin/initctl"
 
 
-# add oracle java ppa
-chrootcmd debconf-set-selections <<EOF
-debconf shared/accepted-oracle-license-v1-1 select true
-debconf shared/accepted-oracle-license-v1-1 seen true
-EOF
-chrootcmd "apt-add-repository -y ppa:webupd8team/java"
-
 # nodejs repository
-wget -q https://deb.nodesource.com/gpgkey/nodesource.gpg.key -O $CHROOTDIR/tmp/nodesource.gpg.key
-chrootcmd "apt-key add /tmp/nodesource.gpg.key"
-cat > "$CHROOTDIR/etc/apt/sources.list.d/nodesource.list" <<EOF
-deb https://deb.nodesource.com/node_0.12 trusty main
-deb-src https://deb.nodesource.com/node_0.12 trusty main
-EOF
+#wget -q https://deb.nodesource.com/gpgkey/nodesource.gpg.key -O $CHROOTDIR/tmp/nodesource.gpg.key
+#chrootcmd "apt-key add /tmp/nodesource.gpg.key"
+#cat > "$CHROOTDIR/etc/apt/sources.list.d/nodesource.list" <<EOF
+#deb https://deb.nodesource.com/node_0.12 trusty main
+#deb-src https://deb.nodesource.com/node_0.12 trusty main
+#EOF
 
 # Upgrade the system, and install/remove packages as desired
 chrootcmd "apt-get update && apt-get dist-upgrade"
@@ -209,15 +202,15 @@ chrootcmd "apt-get install $INSTALLDEBS"
 chrootcmd "apt-get install python"
 chrootcmd "apt-get install python3"
 chrootcmd "apt-get install mono-complete"
+chrootcmd "apt-get install fsharp"
 chrootcmd "apt-get install lua5.2"
-chrootcmd "apt-get install oracle-java8-installer"
+chrootcmd "apt-get install openjdk-8-jdk"
+chrootcmd "apt-get install gccgo"
 chrootcmd "apt-get install golang"
 chrootcmd "apt-get install ruby"
 chrootcmd "apt-get install nodejs"
-
-# scala
-wget http://downloads.typesafe.com/scala/2.11.7/scala-2.11.7.deb -O "$CHROOTDIR/tmp/scala.deb"
-chrootcmd "dpkg -i /tmp/scala.deb"
+chrootcmd "apt-get install gdc"
+chrootcmd "apt-get install scala"
 
 
 
@@ -229,7 +222,7 @@ chrootcmd "apt-get clean"
 # Remove unnecessary setuid bits
 chrootcmd "chmod a-s /usr/bin/wall /usr/bin/newgrp \
 	/usr/bin/chage /usr/bin/chfn /usr/bin/chsh /usr/bin/expiry \
-	/usr/bin/gpasswd /usr/bin/passwd /usr/lib/pt_chown \
+	/usr/bin/gpasswd /usr/bin/passwd \
 	/bin/su /bin/mount /bin/umount /sbin/unix_chkpwd"
 
 # Disable root account

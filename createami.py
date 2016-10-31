@@ -8,9 +8,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 # From http://cloud-images.ubuntu.com/locator/ec2/
-# Choose the hvm:ebs-ssd "Instance Type" for say trusty us-east
-#baseami = 'ami-fdb9fc98'  # Trusty 14.04 amd64 hvm:ebs-ssd 2015-09-28
-baseami = 'ami-5c207736'  # Trusty 14.04 amd64 hvm:ebs-ssd 2015-12-18
+# Choose the hvm:ebs-ssd "Instance Type" for say xenial us-east-1
+baseami = 'ami-40d28157'   # Xenial 16.04 amd64 hvm:ebs-ssd 2016-10-20
 region = 'us-east-1'
 ssh_keypair = 'domjudge-aws'
 ssh_securitygroup = 'open-ssh'
@@ -25,8 +24,6 @@ power_state:
 udscript = """#!/bin/bash -ex
 
 # install needed packages for ansible
-apt-get install -y -q software-properties-common git-core
-apt-add-repository -y ppa:ansible/ansible
 apt-get update
 apt-get install -y -q ansible
 

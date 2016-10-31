@@ -1,0 +1,12 @@
+[Unit]
+Description=DOMjudge Judging Daemon
+
+[Service]
+Type=simple
+ExecStart=/usr/sbin/judgedaemon -n %i
+
+User=domjudge
+Group=domjudge
+
+Restart=always
+RestartSec=5

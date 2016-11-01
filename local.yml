@@ -14,6 +14,22 @@
 
   tasks:
 
+    - name: install judgehost dependencies
+      apt: pkg={{ item }} state=present
+      with_items:
+        - php-cli
+        - php-json
+        - php-curl
+        - procps
+        - bash-static
+        - adduser
+        - unzip
+        - libcgroup1
+        - python-pip
+
+    - name: install awscli
+      pip: name=awscli state=present
+
     - name: debconf seed judgehost setup
       debconf: name='{{ item['name'] }}' question='{{ item['question'] }}' value='{{ item.value }}' vtype='{{ item.type }}'
       tags: domjudge-judgehost

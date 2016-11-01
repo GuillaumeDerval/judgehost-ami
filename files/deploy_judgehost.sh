@@ -12,8 +12,8 @@ fi
 aws s3 cp --region=${JUDGEHOST_S3_REGION} s3://${JUDGEHOST_S3_BUCKET}/${JUDGEHOST_COMMON_DEB} "/tmp/${JUDGEHOST_COMMON_DEB}"
 aws s3 cp --region=${JUDGEHOST_S3_REGION} s3://${JUDGEHOST_S3_BUCKET}/${JUDGEHOST_JUDGEHOST_DEB} "/tmp/${JUDGEHOST_JUDGEHOST_DEB}"
 
-dpkg --force -i /tmp/${JUDGEHOST_COMMON_DEB}
-dpkg --force -i /tmp/${JUDGEHOST_JUDGEHOST_DEB}
+dpkg --force all -i /tmp/${JUDGEHOST_COMMON_DEB}
+dpkg --force all -i /tmp/${JUDGEHOST_JUDGEHOST_DEB}
 
 rm -f /tmp/${JUDGEHOST_COMMON_DEB}
 rm -f /tmp/${JUDGEHOST_JUDGEHOST_DEB}

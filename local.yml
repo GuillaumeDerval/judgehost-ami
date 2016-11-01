@@ -13,13 +13,6 @@
     domjudge_repo_key: 'http://domjudge.org/repokey.asc'
 
   tasks:
-    # pre-reqs for apt_repository
-    - name: install pre-requisites
-      apt: pkg={{ item }} state=present
-      with_items:
-        - python-pycurl
-        - python-apt
-      tags: domjudge-judgehost
 
     - name: debconf seed judgehost setup
       debconf: name='{{ item['name'] }}' question='{{ item['question'] }}' value='{{ item.value }}' vtype='{{ item.type }}'
@@ -38,27 +31,6 @@
             value: "{{ domjudge_api_endpoint_pass }}"
             type: string
 
-    - name: add signing key for the domjudge packages
-      apt_key: url={{ domjudge_repo_key }} state=present
-
-    - name: add the official domjudge repository
-      apt_repository: repo="{{ domjudge_repo }}" update_cache=yes state=present
-      tags: domjudge-judgehost
-
-    - name: install the domjudge judgehost
-      apt: pkg=domjudge-judgehost state=latest install_recommends=no
-      tags: domjudge-judgehost
-      register: installdj
-
-    - name: Make sure domjudge isn't running
-      service: name=domjudge-judgehost state=stopped
-      when: installdj.changed
-
-    - name: delete existing judgehost init scripts
-      command: /usr/sbin/update-rc.d -f domjudge-judgehost remove removes=/etc/rc0.d/K20domjudge-judgehost
-    - name: delete old init script
-      file: path=/etc/init.d/domjudge-judgehost state=absent
-
     - name: copy helper script for running judgedaemons
       copy: src=files/spawn_judgedaemons dest=/usr/local/sbin/spawn_judgedaemons mode=0755
 
@@ -67,7 +39,6 @@
       with_items:
         - judgedaemon-instance@.service
         - judgedaemons.service
-      notify: enable judgedaemons
 
     - name: enable swap accounting(for cgroups)
       lineinfile: dest=/etc/default/grub.d/50-cloudimg-settings.cfg regexp="^GRUB_CMDLINE_LINUX_DEFAULT=" line='GRUB_CMDLINE_LINUX_DEFAULT="console=tty1 console=ttyS0 swapaccount=1"' state=present
@@ -96,8 +67,6 @@
         - mono-complete             # c#
         - fsharp                    # fsharp
         - lua5.2                    # lua
-        #- oracle-java7-installer   # java7
-        #- oracle-java8-installer    # java8
         - openjdk-8-jdk             # jdk8
         - gccgo                     # go reference compiler
         - golang                    # go using gcc
@@ -106,12 +75,13 @@
         - gdc                       # D
         - scala                     # Scala
 
+    - name: copy deployment script
+      copy: src=files/deploy_judgehost.sh dest=/root/deploy_judgehost.sh mode=0755
+
     - name: do something with ufw
       ufw: logging=off
       tags: ['domjudge-judgehost', 'ufw']
 
   handlers:
-    - name: enable judgedaemons
-      service: name=judgedaemons.service enabled=true
     - name: update grub
       command: /usr/sbin/update-grub

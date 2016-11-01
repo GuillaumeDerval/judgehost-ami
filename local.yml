@@ -74,22 +74,22 @@
       apt: pkg={{ item }} state=present
       with_items:
         - build-essential           # c/c++
-        #- ghc                       # haskell
-        #- fpc                       # pascal
-        #- python                    # python 2.7
-        #- python3                   # python 3
-        #- gnat                      # gnu ada
-        #- gfortran                  # fortran
-        #- mono-complete             # c#
-        #- fsharp                    # fsharp
-        #- lua5.2                    # lua
+        - ghc                       # haskell
+        - fpc                       # pascal
+        - python                    # python 2.7
+        - python3                   # python 3
+        - gnat                      # gnu ada
+        - gfortran                  # fortran
+        - mono-complete             # c#
+        - fsharp                    # fsharp
+        - lua5.2                    # lua
         - openjdk-8-jdk             # jdk8
-        #- gccgo                     # go reference compiler
-        #- golang                    # go using gcc
-        #- ruby                      # ruby
-        #- nodejs                    # javascript
-        #- gdc                       # D
-        #- scala                     # Scala
+        - gccgo                     # go reference compiler
+        - golang                    # go using gcc
+        - ruby                      # ruby
+        - nodejs                    # javascript
+        - gdc                       # D
+        - scala                     # Scala
 
     - name: copy deployment script
       copy: src=files/deploy_judgehost.sh dest=/root/deploy_judgehost.sh mode=0755

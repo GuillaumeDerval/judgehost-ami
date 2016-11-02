@@ -57,7 +57,7 @@
         - judgedaemons.service
 
     - name: enable swap accounting(for cgroups)
-      lineinfile: dest=/etc/default/grub.d/50-cloudimg-settings.cfg regexp="^GRUB_CMDLINE_LINUX_DEFAULT=" line='GRUB_CMDLINE_LINUX_DEFAULT="console=tty1 console=ttyS0 swapaccount=1"' state=present
+      lineinfile: dest=/etc/default/grub regexp="^GRUB_CMDLINE_LINUX_DEFAULT=" line='GRUB_CMDLINE_LINUX_DEFAULT="console=tty1 console=ttyS0 swapaccount=1"' state=present
       notify: update grub
 
     - name: install debootstrap which is used when making the chroot
@@ -67,8 +67,8 @@
     - name: setup the chroot
       script: files/make_chroot /var/lib/domjudge/javachroot/ creates=/var/lib/domjudge/javachroot/
       tags: domjudge-judgehost
-      environment:
-        DEBMIRROR: http://us-east-1.ec2.archive.ubuntu.com/ubuntu
+      # environment:
+        # DEBMIRROR: http://us-east-1.ec2.archive.ubuntu.com/ubuntu
 
     - name: install compilers
       apt: pkg={{ item }} state=present

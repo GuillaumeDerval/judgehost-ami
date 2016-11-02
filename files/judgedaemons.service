@@ -7,4 +7,4 @@ RemainAfterExit=yes
 ExecStart=/usr/local/sbin/spawn_judgedaemons
 
 [Install]
-WantedBy=multiuser.target
+WantedBy=multi-user.target

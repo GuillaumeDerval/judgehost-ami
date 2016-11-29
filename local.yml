@@ -90,6 +90,7 @@
         - nodejs                    # javascript
         - gdc                       # D
         - scala                     # Scala
+        - pypy                      # Python2 PyPy
 
     - name: copy deployment script
       copy: src=files/deploy_judgehost.sh dest=/root/deploy_judgehost.sh mode=0755

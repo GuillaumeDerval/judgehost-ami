@@ -211,6 +211,7 @@ chrootcmd "apt-get install ruby"
 chrootcmd "apt-get install nodejs"
 chrootcmd "apt-get install gdc"
 chrootcmd "apt-get install scala"
+chrootcmd "apt-get install pypy"
 
 
 

@@ -9,8 +9,8 @@ from email.mime.text import MIMEText
 
 # From http://cloud-images.ubuntu.com/locator/ec2/
 # Choose the hvm:ebs-ssd "Instance Type" for say xenial us-east-1
-baseami = 'ami-40d28157'   # Xenial 16.04 amd64 hvm:ebs-ssd 2016-10-20
-region = 'us-east-1'
+baseami = 'ami-b0db1ddf'   # Xenial 16.04 amd64 hvm:ebs-ssd 2016-10-20
+region = 'eu-central-1'
 ssh_keypair = 'domjudge-aws'
 ssh_securitygroup = 'open-ssh'
 
@@ -27,7 +27,7 @@ udscript = """#!/bin/bash -ex
 apt-get update
 apt-get install -y -q ansible
 
-ansible-pull -U http://github.com/ubergeek42/judgehost-ami.git -d /mnt/playbooks -i "localhost,"
+ansible-pull -U http://github.com/GuillaumeDerval/judgehost-ami.git -d /mnt/playbooks -i "localhost,"
 
 exit 0
 """

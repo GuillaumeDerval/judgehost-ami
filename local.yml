@@ -6,7 +6,7 @@
       apt: update_cache=yes
 
   vars:
-    domjudge_api_endpoint: http://some-endpoint.example.com/api
+    domjudge_api_endpoint: http://domjudge.info.ucl.ac.be/domjudge/api
     domjudge_api_endpoint_user: judgehost
     domjudge_api_endpoint_pass: judgehost_pass
     domjudge_repo: 'deb http://domjudge.org/debian unstable/'
